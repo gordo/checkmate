@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale:0.25, maximum-scale:1.6, user-scalable=yes;" />
+	<meta name="author" content="Gordon Mei" />
+	<title>Checkmate - Studio Gordon Mei - Labs</title>
+	<style type="text/css">
+		* {margin:0; padding:0; font:normal 14pt "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","Helvetica","Arial",sans-serif; font-weight:300;}
+		body {margin:2em 5em;}
+		a:link, a:visited, a:focus, a:active {color:#009aff;}
+		a:hover {color:#ff5c80; text-decoration:line-through;}
+		fieldset {display:block; margin:0.5em 0; padding:0.3em; border-radius:0.5em; -moz-border-radius:0.5em; -webkit-border-radius:0.5em; width:auto; border:1px solid #eee;}
+		legend {margin-left:1em; letter-spacing:2.5px; font-weight:bold; text-transform:lowercase;}
+		input[type="checkbox"] {margin-right:0.3em; height:14pt;}
+		label {line-height:14pt;}
+		/* label:after {content:"."; display:block; height:0; clear:both; visibility:hidden;} */
+		
+		#sosumi {margin:1em 0; font-size:10pt;}
+		#sosumi a {font-size:10pt;}
+	</style>
+
+	<link rel="shortcut icon" href="../../favico.png" type="image/png" />
+</head>
+<body>
+	<form>
+		<fieldset id="boxed">
+			<legend>Shift-click to Select Multiple Stars</legend>
+			<p><input type="checkbox" class="checkered" value="1" id="check1" /><label for="check1">Polaris</label></p>
+			<p><input type="checkbox" class="checkered" value="2" id="check2" /><label for="check2">Orion</label></p>
+			<p><input type="checkbox" class="checkered" value="3" id="check3" /><label for="check3">Leo</label></p>
+			<p><input type="checkbox" class="checkered" value="4" id="check4" /><label for="check4">Leo Minor</label></p>
+			<p><input type="checkbox" class="checkered" value="5" id="check5" /><label for="check5">Ursa Major</label></p>
+			<p><input type="checkbox" class="checkered" value="6" id="check6" /><label for="check6">Ursa Minor</label></p>
+			<p><input type="checkbox" class="checkered" value="7" id="check7" /><label for="check7">Perseus</label></p>
+			<p><input type="checkbox" class="checkered" value="8" id="check8" /><label for="check8">Andromeda</label></p>
+		</fieldset>
+	</form>
+	<div id="sosumi">2010. <a href="http://www.monstercyb.org/gordon/lab">Monstercyb.org</a>. A part of the <a href="http://www.ocf.berkeley.edu/~gordeon">GordeonBleu</a> network.</div>
+
+	<script type="text/javascript">
+		(function() {
+			var boxed = document.getElementById("boxed");
+			//var boxedinputclassnames = boxed.getElementsByClassName("checkered");
+			var boxedinputs = boxed.getElementsByTagName("input");
+			var currentcheckindex;
+			var lastcheckindex;
+			var eltarget;
+			var lastchecked = null;
+
+			function load(e) {
+				//some IE love
+				if (!e) {
+					var e = window.event;
+				}
+
+				if (e.target) {
+					eltarget = e.target;
+				}
+				//more IE love
+				else {
+					eltarget = e.srcElement;
+				}
+
+				if(!e.shiftKey) {
+					//anything besides shift + click
+					lastchecked = eltarget.value;
+				}
+				else if(e.shiftKey) {
+					//shift + click
+
+					//manually set checked property on checkbox when label is clicked
+					//clicking the labels doesn't seem to set the checkboxes "checked" to true or false in this situation, so I'm doing this
+					if (eltarget.tagName == "LABEL" || eltarget.tagName == "label") {
+						eltarget = eltarget.previousSibling;
+
+						//Firefox is the only modern browser I've seen that doesn't check/uncheck checkboxes when using a shift modifier key while clicking. Note that Camino, also Gecko-based, behaves just fine.
+						//Adding this if/else block fixes the Firefox shift+click label behavior, but causes regression in all other browsers:
+						/*
+						if(eltarget.checked) {
+							eltarget.checked = false;
+						}
+						else {
+							eltarget.checked = true;
+							//eltarget.setAttribute("checked","checked");
+						}
+						*/
+					}
+
+					currentcheckindex = eltarget.value;
+					lastcheckindex = lastchecked;
+
+					//decrement values for array indexing
+					currentcheckindex--;
+					lastcheckindex--;
+
+
+					for (var i=Math.min(currentcheckindex,lastcheckindex); i<=Math.max(currentcheckindex,lastcheckindex); i++) {
+						//boxedinputclassnames("checkered")[i].checked = eltarget.checked;
+						//IE 8 and earlier don't support getElementsByClassName
+						
+						//don't need an extra check beyond input tag name because other inputs will never be sandwiched between any checkboxes
+						boxedinputs[i].checked = eltarget.checked;
+					}
+				}
+			}
+
+			if (boxed.addEventListener) {
+				boxed.addEventListener("click", load, false);
+			}
+			else if (boxed.attachEvent) {
+				boxed.attachEvent("onclick", load);
+			}
+
+    	})();
+    </script>
+
+	<!--Created: 2010 April 14-->
+
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+		try {
+		var pageTracker = _gat._getTracker("UA-299058-9");
+		pageTracker._trackPageview();
+		} catch(err) {}</script>
+</body>
+</html>
